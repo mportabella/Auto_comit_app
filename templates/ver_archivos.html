@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Archivos del commit {{ commit.hexsha[:7] }}</title>
+</head>
+<body>
+    <h1>Archivos del commit {{ commit.hexsha[:7] }}</h1>
+    <ul>
+        {% for archivo in archivos %}
+            <li>
+                {{ archivo.nombre }} —
+                <a href="{{ archivo.ruta }}">Descargar</a>
+            </li>
+        {% endfor %}
+    </ul>
+    <a href="/">← Volver</a>
+</body>
+</html>

@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Gestión del Proyecto</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            padding: 2rem;
+            background-color: #f9f9f9;
+        }
+
+        h1 {
+            margin-bottom: 1rem;
+        }
+
+        form {
+            background-color: #fff;
+            padding: 1rem;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            margin-bottom: 2rem;
+        }
+
+        label {
+            display: block;
+            margin-top: 1rem;
+        }
+
+        input, select, textarea {
+            width: 100%;
+            padding: 0.5rem;
+            margin-top: 0.3rem;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+
+        input[type="submit"] {
+            margin-top: 1rem;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+
+        input[type="submit"]:hover {
+            background-color: #0056b3;
+        }
+
+        .fase {
+            padding: 1rem;
+            margin: 1rem 0;
+            border: 2px solid #ccc;
+            border-radius: 8px;
+            background-color: #f5f5f5;
+        }
+
+        .fase.con-commits {
+            border-color: #007bff;
+            background-color: #e6f0ff;
+        }
+
+        .fase h2 {
+            margin: 0;
+        }
+
+        .fase small {
+            color: #555;
+        }
+
+        a {
+            text-decoration: none;
+            color: #007bff;
+        }
+
+        a:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+    <h1>Subir archivos y hacer commit</h1>
+
+    <form method="POST" enctype="multipart/form-data">
+        <label for="categoria">Fase del proyecto:</label>
+        <select name="categoria" required>
+            <option value="idea">Idea</option>
+            <option value="diseño">Diseño</option>
+            <option value="construccion">Construcción</option>
+            <option value="uso">Uso</option>
+        </select>
+
+        <label for="comentario">Comentario:</label>
+        <textarea name="comentario" rows="3" required></textarea>
+        <label for="dia_hora">Día y hora:</label>
+        <input type="datetime-local" name="dia_hora" required>
+        <label for="archivos">Seleccionar archivos:</label>
+        <input type="file" name="archivos" multiple>
+
+        <input type="submit" value="Hacer commit">
+    </form>
+
+    <h2>Fases del Proyecto</h2>
+
+    {% for fase in ['historico', 'idea', 'diseño', 'construccion', 'uso'] %}
+        <div class="fase {% if conteo[fase] > 0 %}con-commits{% endif %}">
+            <h2><a href="{{ url_for('timeline.timeline', fase=fase) }}">{{ fase.capitalize() }}</a></h2>
+            <small>
+                {% if conteo[fase] > 0 %}
+                    {{ conteo[fase] }} commit{{ 's' if conteo[fase] > 1 else '' }}
+                {% else %}
+                    Sin commits aún
+                {% endif %}
+            </small>
+        </div>
+    {% endfor %}
+
+    <h3>Duración de las fases del proyecto</h3>
+
+    <img src="{{ grafico_url }}" alt="Gráfico de fases del proyecto" style="max-width: 100%; height: auto; margin-top: 2rem;">
+
+    <iframe src="{{ url_for('static', filename='fases_interactivo.html') }}" width="100%" height="300" frameborder="0"></iframe>
+
+</body>
+</html>

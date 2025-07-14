@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Comparación de {{ archivo }}</title>
+    <style>
+        body {
+            font-family: monospace;
+            background-color: #f9f9f9;
+            padding: 2rem;
+        }
+        pre {
+            background-color: #fff;
+            padding: 1rem;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+            overflow-x: auto;
+            white-space: pre-wrap;
+        }
+        .info {
+            margin-bottom: 1rem;
+        }
+        a {
+            display: inline-block;
+            margin-top: 1rem;
+            color: #007bff;
+            text-decoration: none;
+        }
+        a:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+    <div class="info">
+        <h2>Comparación de archivo: <code>{{ archivo }}</code></h2>
+        <p><strong>Commits:</strong> {{ commit1 }} ⟷ {{ commit2 }}</p>
+    </div>
+    <pre>{{ diff }}</pre>
+    <a href="{{ url_for('timeline.timeline', fase='historico') }}">← Volver al timeline</a>
+</body>
+</html>

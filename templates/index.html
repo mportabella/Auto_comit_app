@@ -76,10 +76,31 @@
         a:hover {
             text-decoration: underline;
         }
+        button {
+    padding: 0.4rem 0.8rem;
+    background-color: #17a2b8;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 0.9rem;
+    }
+
+    button:hover {
+        background-color: #138496;
+    }
+
     </style>
 </head>
 <body>
-    <h1>Subir archivos y hacer commit</h1>
+    <h1>
+    Proyecto actual: <strong>{{ rama_actual }}</strong>
+    <form action="/selector" method="get" style="display: inline;">
+        <button type="submit" style="margin-left: 1rem;">Cambiar de proyecto</button>
+    </form>
+    </h1>
+
+
 
     <form method="POST" enctype="multipart/form-data">
         <label for="categoria">Fase del proyecto:</label>

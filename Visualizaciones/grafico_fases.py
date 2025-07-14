@@ -9,7 +9,9 @@ repo_path = os.path.join(os.path.dirname(__file__), '..', 'repo2')
 repo = Repo(repo_path)
 
 # Obtener commits ordenados cronológicamente
-commits = list(repo.iter_commits('main'))
+rama_activa = repo.active_branch.name
+commits = list(repo.iter_commits(rama_activa))
+
 commits.sort(key=lambda c: c.committed_datetime)
 
 # Buscar el primer commit de cada fase detectada

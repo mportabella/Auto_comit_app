@@ -1,0 +1,10 @@
+<h1>Seleccionar proyecto</h1>
+<form method="POST" action="/selector">
+    <label for="proyecto">Proyecto:</label>
+    <select name="proyecto" required>
+        {% for rama in ramas %}
+            <option value="{{ rama }}">{{ rama.capitalize() }}</option>
+        {% endfor %}
+    </select>
+    <input type="submit" value="Entrar">
+</form>

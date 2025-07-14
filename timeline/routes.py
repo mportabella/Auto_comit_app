@@ -1,15 +1,16 @@
-from flask import Blueprint, render_template, send_file, abort
+from flask import Blueprint, render_template, send_file, abort,session
 from git import Repo
 import os
 import io
-from .git_utils import obtener_commits_por_fase, REPO_PATH
+from .git_utils import obtener_commits_por_fase, REPO_PATH, obtener_diff_entre_commits
 
 timeline_bp = Blueprint('timeline', __name__)
 
 @timeline_bp.route('/timeline/<fase>')
 def timeline(fase):
-    commits = obtener_commits_por_fase(fase)
-    return render_template('timeline.html', fase=fase, commits=commits)
+    rama = session.get('rama','main')
+    commits = obtener_commits_por_fase(fase, rama)
+    return render_template('timeline.html', fase=fase, commits=commits,rama_actual = rama )
 
 @timeline_bp.route('/ver-archivos/<commit_hash>')
 def ver_archivos(commit_hash):
@@ -42,4 +43,11 @@ def descargar_archivo(commit_hash, archivo):
         )
     except Exception:
         abort(404)
+
+@timeline_bp.route('/comparar/<commit1>/<commit2>/<path:archivo>')
+def comparar_archivos(commit1, commit2, archivo):
+    diff = obtener_diff_entre_commits(commit1, commit2, archivo)
+    return render_template('comparar_archivos.html', diff=diff, archivo=archivo, commit1=commit1,
+                                   commit2=commit2)
+
 

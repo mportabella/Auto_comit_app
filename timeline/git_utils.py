@@ -3,9 +3,9 @@ import os
 import re
 REPO_PATH = os.path.join(os.path.dirname(__file__), '..', 'repo2')
 
-def obtener_commits_por_fase(fase):
+def obtener_commits_por_fase(fase,rama='main'):
     repo = Repo(REPO_PATH)
-    commits = list(repo.iter_commits('main'))
+    commits = list(repo.iter_commits(f'{rama}'))
     resultado = []
 
     for commit in commits:
@@ -33,10 +33,10 @@ def obtener_commits_por_fase(fase):
 
 
 
-def contar_commits_por_fase():
+def contar_commits_por_fase(rama='main'):
     fases = ['historico', 'idea', 'diseño', 'construccion', 'uso']
     repo = Repo(REPO_PATH)
-    commits = list(repo.iter_commits('main'))
+    commits = list(repo.iter_commits(rama))
 
     conteo = {fase: 0 for fase in fases}
 
@@ -51,5 +51,14 @@ def contar_commits_por_fase():
     conteo['historico'] = len(commits)
 
     return conteo
+
+def obtener_diff_entre_commits(commit_hash1, commit_hash2, archivo):
+    repo = Repo(REPO_PATH)
+    try:
+        diff = repo.git.diff(commit_hash1, commit_hash2, '--', archivo)
+        return diff
+    except Exception as e:
+        return f"Error al obtener diff: {e}"
+
 
 

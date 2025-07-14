@@ -72,7 +72,7 @@ def index():
         dia_hora = datetime.strptime(dia_hora_raw, "%Y-%m-%dT%H:%M").strftime("%Y-%m-%d %H:%M")
 
         # Limpiar el directorio repo2 antes de guardar nuevos archivos
-        limpiar_directorio(REPO_PATH)
+        #limpiar_directorio(REPO_PATH)
 
         # Guardar archivos
         for archivo in archivos:
@@ -106,10 +106,20 @@ def index():
 
     # Ejecutar scripts de visualización
     script_path = os.path.join(os.path.dirname(__file__), 'Visualizaciones', 'grafico_fases.py')
-    subprocess.run(['python', script_path], check=True)
+    import sys
+    commits = list(repo.iter_commits(session.get('rama', 'main')))
+    hay_fases = any('[' in c.message and ']' in c.message for c in commits)
 
-    script_path = os.path.join(os.path.dirname(__file__), 'Visualizaciones', 'grafico_fases_plotly.py')
-    subprocess.run(['python', script_path], check=True)
+    if hay_fases:
+        try:
+            script_path = os.path.join(os.path.dirname(__file__), 'Visualizaciones', 'grafico_fases.py')
+            subprocess.run([sys.executable, script_path], check=True)
+            script_path = os.path.join(os.path.dirname(__file__), 'Visualizaciones', 'grafico_fases_plotly.py')
+            subprocess.run([sys.executable, script_path], check=True)
+        except Exception as e:
+            print(f"Error al generar gráficos: {e}")
+    else:
+        print("No hay commits con formato de fase. Se omite la generación de gráficos.")
 
     return render_template(
         'index.html',

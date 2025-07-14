@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Seleccionar archivos para comparar</title>
+    <style>
+        body { font-family: Arial, sans-serif; padding: 2rem; background: #f9f9f9; }
+        form { background: #fff; padding: 1rem; border-radius: 8px; box-shadow: 0 2px 5px rgba(0,0,0,0.1); }
+        h2 { margin-bottom: 1rem; }
+        label { display: block; margin-bottom: 0.5rem; }
+        button { margin-top: 1rem; padding: 0.5rem 1rem; background: #007bff; color: white; border: none; border-radius: 4px; cursor: pointer; }
+        button:hover { background: #0056b3; }
+        pre { background: #fff; padding: 1rem; border: 1px solid #ccc; border-radius: 8px; overflow-x: auto; white-space: pre-wrap; margin-top: 2rem; }
+    </style>
+</head>
+<body>
+    <h2>Selecciona los archivos a comparar entre los commits {{ commit1 }} y {{ commit2 }}</h2>
+    <form method="POST">
+        <input type="hidden" name="commits" value="{{ commit1 }}">
+        <input type="hidden" name="commits" value="{{ commit2 }}">
+        <input type="hidden" name="fase" value="{{ fase }}">
+        {% for archivo in archivos %}
+            <label>
+                <input type="checkbox" name="archivos" value="{{ archivo }}">
+                {{ archivo }}
+            </label>
+        {% endfor %}
+        <button type="submit">Comparar archivos seleccionados</button>
+    </form>
+
+    {% if diffs %}
+    <h3>Resultados de la comparación:</h3>
+    {% for item in diffs %}
+        <h4>{{ item.archivo }}</h4>
+        <pre>{{ item.diff }}</pre>
+
+        {% if item.es_ifc %}
+            <form method="POST" action="{{ url_for('timeline.ver_diferencias_ifc') }}">
+                <input type="hidden" name="archivo" value="{{ item.archivo }}">
+                <input type="hidden" name="commit1" value="{{ item.commit1 }}">
+                <input type="hidden" name="commit2" value="{{ item.commit2 }}">
+                <button type="submit">Ver diferencias IFC</button>
+            </form>
+        {% endif %}
+    {% endfor %}
+{% endif %}
+
+
+    <a href="{{ url_for('timeline.timeline', fase=fase) }}">← Volver</a>
+</body>
+</html>

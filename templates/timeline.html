@@ -108,14 +108,21 @@
 
 
     <div class="timeline">
-        {% for commit in commits %}
+        <form method="POST" action="{{ url_for('timeline.seleccionar_archivos_para_comparar') }}">
+    {% for commit in commits %}
         <div class="timeline-entry fase-{{ commit.fase|lower }}">
-    <div class="commit-box">
-        <div class="commit-meta">{{ commit.fecha }} — <code>{{ commit.hash }}</code></div>
-        <div class="commit-message">{{ commit.mensaje }}</div>
-        <a href="{{ url_for('timeline.ver_archivos', commit_hash=commit.hash) }}" class="btn">Ver archivos</a>
-    </div>
-            {% endfor %}
+            <div class="commit-box">
+                <input type="checkbox" name="commits" value="{{ commit.hash }}">
+                <div class="commit-meta">{{ commit.fecha }} — <code>{{ commit.hash }}</code></div>
+                <div class="commit-message">{{ commit.mensaje }}</div>
+                <a href="{{ url_for('timeline.ver_archivos', commit_hash=commit.hash) }}" class="btn">Ver archivos</a>
+            </div>
+        </div>
+    {% endfor %}
+    <input type="hidden" name="fase" value="{{ fase }}">
+    <button type="submit" class="btn">Comparar commits seleccionados</button>
+</form>
+
 </div>
 
 
